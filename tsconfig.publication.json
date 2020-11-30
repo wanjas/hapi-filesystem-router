@@ -1,0 +1,10 @@
+{
+  "extends": "@wanjas/dev/typescript/tsconfig.json",
+  "include": ["src/**/*"],
+  "exclude": ["src/__tests__"],
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "baseUrl": "."
+  }
+}
