@@ -1,10 +1,16 @@
 import Hapi from '@hapi/hapi';
 import pMap from 'p-map';
+import path from 'path';
 import { RouterModule } from './module';
 import { getFilesList, isReadable, toAbsolutePath } from './files';
 import { composeRouteTemplates } from './templates';
 
-export async function attachRoutes(rootPath: string, server: Hapi.Server) {
+export async function attachRoutes(
+  server: Hapi.Server,
+  rootPath = 'routes',
+  routePrefix?: string,
+  defaultParams: RouterModule = {},
+) {
   rootPath = toAbsolutePath(rootPath);
   const rootIsReadable = await isReadable(rootPath);
 
@@ -20,12 +26,29 @@ export async function attachRoutes(rootPath: string, server: Hapi.Server) {
   await pMap(
     templates,
     async ({ method, requirePath, route }) => {
-      const module = (await import(requirePath)) as RouterModule;
+      const module = (await import(path.resolve(rootPath, requirePath))) as {
+        default: RouterModule;
+      };
+
+      if (
+        typeof defaultParams.options === 'function' ||
+        typeof module.default.options === 'function'
+      ) {
+        throw new Error("Can't handle function as options yet");
+      }
+      const mergedOptions = {
+        ...defaultParams.options,
+        ...module.default.options,
+      };
 
       server.route({
+        // TODO create more sophisticated merge
+        // (some stuff can be both functions or objects and probably only one level deep merge needed)
+        ...defaultParams,
+        ...module.default,
+        options: mergedOptions,
         method,
-        path: route,
-        ...module,
+        path: routePrefix ? `/${routePrefix}${route}` : route,
       });
     },
     { concurrency: 1 },
