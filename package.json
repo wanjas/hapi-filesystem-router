@@ -1,6 +1,6 @@
 {
   "name": "hapi-filesystem-router",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Filesystem based routing for Hapi",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
