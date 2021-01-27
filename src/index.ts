@@ -1,16 +1,18 @@
 import Hapi from '@hapi/hapi';
 import pMap from 'p-map';
 import path from 'path';
-import { RouterModule } from './module';
+import { RouteModule } from './module';
 import { getFilesList, isReadable, toAbsolutePath } from './files';
 import { composeRouteTemplates } from './templates';
+
+export { RouteModule } from './module';
 
 export async function attachRoutes(
   server: Hapi.Server,
   rootPath = 'routes',
   routePrefix?: string,
-  defaultParams: RouterModule = {},
-) {
+  defaultParams: RouteModule = {},
+): Promise<void> {
   rootPath = toAbsolutePath(rootPath);
   const rootIsReadable = await isReadable(rootPath);
 
@@ -27,7 +29,7 @@ export async function attachRoutes(
     templates,
     async ({ method, requirePath, route }) => {
       const module = (await import(path.resolve(rootPath, requirePath))) as {
-        default: RouterModule;
+        default: RouteModule;
       };
 
       if (

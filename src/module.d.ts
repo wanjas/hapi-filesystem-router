@@ -1,3 +1,3 @@
-import Hapi from '@hapi/hapi';
+import type Hapi from '@hapi/hapi';
 
-export type RouterModule = Omit<Hapi.ServerRoute, 'method' | 'path'>;
+export type RouteModule = Omit<Hapi.ServerRoute, 'method' | 'path'>;
