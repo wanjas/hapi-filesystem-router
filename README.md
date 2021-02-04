@@ -121,8 +121,5 @@ Package is written in Typescript, so types are included.
 ### Node.js
 Package is tested on Node v14+ (LTS).
 
-But it should work on Node v10+. 
-
 ### Hapi
-Package is tested on Hapi v19+.
-
+Package is tested on Hapi v20+.
