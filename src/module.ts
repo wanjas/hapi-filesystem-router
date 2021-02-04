@@ -1,4 +1,5 @@
 import Hapi, { ResponseToolkit, Lifecycle } from '@hapi/hapi';
+import { Merge } from 'type-fest';
 
 type CustomMethod<Params, Payload, UserCredentials, Query> = (
   request: CustomRequest<Params, Payload, UserCredentials, Query>,
@@ -6,29 +7,42 @@ type CustomMethod<Params, Payload, UserCredentials, Query> = (
   err?: Error,
 ) => Lifecycle.ReturnValue;
 
-type CustomAuthCredentials<
-  T extends Hapi.UserCredentials
-> = Hapi.AuthCredentials & { user?: T };
+type CustomAuthCredentials<T extends Hapi.UserCredentials> = Merge<
+  Hapi.AuthCredentials,
+  { user?: T }
+>;
 
-type CustomRequestAuth<T> = Hapi.RequestAuth & {
-  credentials: CustomAuthCredentials<T>;
-};
+type CustomRequestAuth<T> = Merge<
+  Hapi.RequestAuth,
+  {
+    credentials: CustomAuthCredentials<T>;
+  }
+>;
 
-type CustomRequest<Params, Payload, UserCredentials, Query> = Hapi.Request & {
-  auth: CustomRequestAuth<UserCredentials>;
-  params: Params;
-  payload: Payload;
-  query: Query;
-};
+type CustomRequest<Params, Payload, UserCredentials, Query> = Merge<
+  Hapi.Request,
+  {
+    auth: CustomRequestAuth<UserCredentials>;
+    params: Params;
+    payload: Payload;
+    query: Query;
+  }
+>;
 
 export type RouteModule<
   Params = unknown,
   Payload = unknown,
   UserCredentials = unknown,
   Query = unknown
-> = Omit<Hapi.ServerRoute, 'method' | 'path' | 'handler'> & {
-  handler?: CustomMethod<Params, Payload, UserCredentials, Query>;
-};
+> = Omit<
+  Merge<
+    Hapi.ServerRoute,
+    {
+      handler?: CustomMethod<Params, Payload, UserCredentials, Query>;
+    }
+  >,
+  'method' | 'path'
+>;
 
 type RequestArgs = {
   params?: unknown;

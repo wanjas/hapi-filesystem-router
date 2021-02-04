@@ -25,9 +25,7 @@ const route: FSRM<{
       },
     } = request.auth;
 
-    const {
-      payload: { a1, a2 },
-    } = request;
+    const { a1, a2 } = request.payload;
 
     const { id: idFromParams } = request.params;
     const { q } = request.query;
