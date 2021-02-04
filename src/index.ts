@@ -5,7 +5,7 @@ import { RouteModule } from './module';
 import { getFilesList, isReadable, toAbsolutePath } from './files';
 import { composeRouteTemplates } from './templates';
 
-export { RouteModule } from './module';
+export { RouteModule, FSRM } from './module';
 
 export async function attachRoutes(
   server: Hapi.Server,

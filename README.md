@@ -89,19 +89,25 @@ File with handler should be named as any http method except for 'head' and `expo
 
 ```typescript
 // routes/item/{id}/post.ts 
-import Hapi from '@hapi/hapi';
-import Joi from '@hapi/joi';
+import Joi from 'joi';
+import { FSRM } from 'hapi-filesystem-router';
 
-const route: Omit<Hapi.ServerRoute, 'method' | 'path'> = {
+const route: FSRM<{
+  payload: { title: string };
+  params: { id: string };
+}> = {
   options: {
     validate: {
       payload: Joi.object({
         title: Joi.string().length(255),
       }),
+      params: Joi.object({
+        id: Joi.string(),
+      }),
     },
   },
   handler: async (request, h) => {
-    const { title } = request.payload as any;
+    const { title } = request.payload;
     const { id } = request.params;
     return {
       id,
