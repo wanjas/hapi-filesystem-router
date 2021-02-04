@@ -27,7 +27,7 @@ export type RouteModule<
   UserCredentials = unknown,
   Query = unknown
 > = Omit<Hapi.ServerRoute, 'method' | 'path' | 'handler'> & {
-  handler: CustomMethod<Params, Payload, UserCredentials, Query>;
+  handler?: CustomMethod<Params, Payload, UserCredentials, Query>;
 };
 
 type RequestArgs = {
