@@ -7,6 +7,46 @@ import { composeRouteTemplates } from './templates';
 
 export { RouteModule, FSRM } from './module';
 
+type FileExtension = `.${string}`;
+type ErrorLevel = 'error' | 'warning' | 'ignore';
+
+export type FilesystemRouterOptions = {
+  rootPath?: string;
+  routePrefix?: string;
+  defaultRouteOptions?: Hapi.ServerRoute['options'];
+  vhost?: Hapi.ServerRoute['vhost'];
+  handler?: Hapi.ServerRoute['handler'];
+  rules?: Hapi.ServerRoute['rules'];
+  fileExtensions?: FileExtension[];
+  fsReadConcurrency?: number;
+  nonMethodFiles?: ErrorLevel;
+};
+
+export const FilesystemRouter: Hapi.Plugin<
+  FilesystemRouterOptions | FilesystemRouterOptions[]
+> = {
+  register: async (server, options = {}) => {
+    if (!Array.isArray(options)) {
+      options = [options];
+    }
+
+    options = options.map(
+      (ops): FilesystemRouterOptions => ({
+        rootPath: 'routes',
+        routePrefix: '',
+        defaultRouteOptions: {},
+        fileExtensions: ['.js', '.ts'],
+        fsReadConcurrency: 5,
+        nonMethodFiles: 'warning',
+        ...ops,
+      }),
+    );
+  },
+  // eslint-disable-next-line global-require
+  pkg: require('./package.json'),
+  multiple: true,
+};
+
 export async function attachRoutes(
   server: Hapi.Server,
   rootPath = 'routes',

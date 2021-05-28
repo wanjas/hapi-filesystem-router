@@ -1,3 +1,4 @@
 module.exports = {
-  ...require("@wanjas/dev/prettier/.prettierrc.js"),
+  singleQuote: true,
+  trailingComma: 'all',
 };

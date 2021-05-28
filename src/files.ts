@@ -41,7 +41,10 @@ export async function getFilesList(
 
       return itemPath;
     },
-    { concurrency: 5 },
+    {
+      // arbitrary number
+      concurrency: 5,
+    },
   );
 
   const list = files.flat();

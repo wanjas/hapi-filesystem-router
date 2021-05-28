@@ -33,7 +33,7 @@ export type RouteModule<
   Params = unknown,
   Payload = unknown,
   UserCredentials = unknown,
-  Query = unknown
+  Query = unknown,
 > = Omit<
   Merge<
     Hapi.ServerRoute,
