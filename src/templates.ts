@@ -23,9 +23,9 @@ export async function composeRouteTemplate(
   if (['.ts', '.js'].includes(info.ext)) {
     if (isHttpMethod(info.name)) {
       return {
-        requirePath: info.dir ? `./${info.dir}/${info.name}` : `./${info.name}`,
+        requirePath: `.${path.sep}${info.dir ? path.join(info.dir, info.name) : info.name}`,
         method: info.name,
-        route: `/${info.dir}`,
+        route: `/${info.dir.split(path.sep).join('/')}`,
       };
     }
   }
